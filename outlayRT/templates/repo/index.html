@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+
+    <head>
+        <title>Welcome to OutlayRT</title>
+    </head>
+
+    <body>
+        <h1>Welcome to OutlayRT</h1>
+         <strong>Pick your repo</strong><br />
+        
+
+        {% if repos %}
+            <ul>
+                {% for repo in repos %}
+                <!-- Following line changed to add an HTML hyperlink -->
+                <li><a href="/repo/{{ repo.url }}">{{ repo.name }}</a></li>
+                {% endfor %}
+            </ul>
+       {% else %}
+            <strong>There are no repos present.</strong>
+       {% endif %}
+
+    </body>
+
+</html>
