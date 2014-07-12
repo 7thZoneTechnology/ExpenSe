@@ -6,7 +6,7 @@ PROJECT_PATH = os.path.join(SETTINGS_DIR, os.pardir)
 PROJECT_PATH = os.path.abspath(PROJECT_PATH) #parent directory (<workspace>/OutlayRT)
 TEMPLATE_PATH = os.path.join(PROJECT_PATH, 'templates')
 STATIC_PATH = os.path.join(PROJECT_PATH, 'static')
-DATABASE_PATH = os.path.join(PROJECT_PATH, 'account.db')
+DATABASE_PATH = os.path.join(PROJECT_PATH, 'outlay.db')
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -130,7 +130,8 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'account',
+    
+    'repo',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
