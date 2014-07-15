@@ -9,7 +9,11 @@
     </head>
 
     <body>
-        <h1>Welcome to OutlayRT</h1>
+        {% if user.is_authenticated %}
+            <h1>OutlayRT says... hello {{ user.username }}!</h1>
+        {% else %}
+            <h1>OutlayRT says... hello world!</h1>
+        {% endif %}
          <strong>Pick your repo</strong><br />
         
 
@@ -23,7 +27,13 @@
        {% else %}
             <strong>There are no repos present.</strong>
        {% endif %}
-
+       {% if user.is_authenticated %}
+            <a href="/OutlayRT/restricted/">Restricted Page</a><br />
+            <a href="/OutlayRT/logout/">Logout</a><br />
+        {% else %}
+            <a href="/OutlayRT/register/">Register Here</a><br />
+            <a href="/OutlayRT/login/">Login</a><br />
+        {% endif %}
     </body>
 
 </html>

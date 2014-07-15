@@ -1,6 +1,6 @@
 from django import forms
-from repo.models import Expenses, Repo
-import datetime 
+from repo.models import Expenses, Repo, UserProfile
+from django.contrib.auth.models import User
 
 class ExpenseForm(forms.ModelForm):
 	date = forms.CharField(max_length=64, help_text="Enter the date") #what date the expense was entered
@@ -13,3 +13,16 @@ class ExpenseForm(forms.ModelForm):
 	class Meta:
 		model = Expenses
 		fields = ('amount', 'repo', 'name')
+
+class UserForm(forms.ModelForm):
+	password = forms.CharField(widget=forms.PasswordInput())
+
+	class Meta:
+		model = User
+		fields = ('username', 'password', 'email')
+
+class UserProfileForm(forms.ModelForm):
+	class Meta:
+		model = UserProfile
+		fields = ('website', 'picture')
+
