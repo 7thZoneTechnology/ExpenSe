@@ -1,39 +1,26 @@
-<!DOCTYPE html>
+{% extends 'repo/base.html' %}
 
-{% load static %}
+{% block title %}{{ repo_name }}{% endblock %}
 
-<html>
+{% block body_block %}
+    {% if user.is_authenticated %}
+        <h1>OutlayRT says... hello {{ user.username }}!</h1>
+    {% else %}
+        <h1>OutlayRT says... hello world!</h1>
+    {% endif %}
+     <strong>Pick your repo</strong><br />
 
-    <head>
-        <title>Welcome to OutlayRT</title>
-    </head>
 
-    <body>
-        {% if user.is_authenticated %}
-            <h1>OutlayRT says... hello {{ user.username }}!</h1>
-        {% else %}
-            <h1>OutlayRT says... hello world!</h1>
-        {% endif %}
-         <strong>Pick your repo</strong><br />
-        
-
-        {% if repos %}
-            <ul>
-                {% for repo in repos %}
-                <!-- Following line changed to add an HTML hyperlink -->
-                <li><a href="/repo/{{ repo.url }}">{{ repo.name }}</a></li>
-                {% endfor %}
-            </ul>
-       {% else %}
-            <strong>There are no repos present.</strong>
-       {% endif %}
-       {% if user.is_authenticated %}
-            <a href="/OutlayRT/restricted/">Restricted Page</a><br />
-            <a href="/OutlayRT/logout/">Logout</a><br />
-        {% else %}
-            <a href="/OutlayRT/register/">Register Here</a><br />
-            <a href="/OutlayRT/login/">Login</a><br />
-        {% endif %}
-    </body>
-
-</html>
+    {% if repos %}
+        <ul>
+            {% for repo in repos %}
+            <!-- Following line changed to add an HTML hyperlink -->
+            <li><a href="/repo/{{ repo.url }}">{{ repo.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>There are no repos present.</strong>
+    {% endif %}
+{% endblock %}
+       
+    
