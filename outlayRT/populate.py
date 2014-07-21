@@ -10,5 +10,5 @@ def populate():
 if __name__ == "__main__" :
 	print "Starting outlay population script..."
 	os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OutlayRT.settings')
-	from repo.models import Repo, Expenses
+	from mainapp.models import Repo, Expenses
 	populate()

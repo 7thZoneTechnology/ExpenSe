@@ -1,0 +1,28 @@
+{% extends 'mainapp/base.html' %}
+
+{% block title %}{{ "OutlayRT" }}{% endblock %}
+
+{% block body_block %}
+
+{% if user.is_authenticated %}
+        <h1>Welcome to your dashboard {{ user.username }}</h1>
+
+     <strong>Your repos</strong><br />
+
+
+    {% if repos %}
+        <ul>
+            {% for repo in repos %}
+            <!-- Following line changed to add an HTML hyperlink -->
+            <li><a href="/OutlayRT/{{ repo.url }}">{{ repo.name }}</a></li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <strong>There are no repos present.</strong>
+    {% endif %}
+
+    <a href="/OutlayRT/add_expense">Add an expense</a>
+
+{% endif %}
+
+{% endblock %}

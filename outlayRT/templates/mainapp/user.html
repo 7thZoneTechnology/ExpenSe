@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>OutlayRT</title>
+    </head>
+
+    <body>
+        <h1>Welcome to expense {{ expense_name }} !</h1>
+        {% if expenses %}
+            <ul>
+                {% for expense in expenses %}
+                <!-- Following line changed to add an HTML hyperlink -->
+                <li>{{ expense.name }} on {{ expense.date }}: {{ expense.amount }}</li>
+                {% endfor %}
+            </ul>
+       {% else %}
+            <strong>There are no expenses present.</strong>
+       {% endif %}
+    </body>
+</html>
