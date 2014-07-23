@@ -5,14 +5,22 @@ from mainapp.models import Repo, Expenses
 from mainapp.forms import ExpenseForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 
 def index(request): #render the index page
 	context = RequestContext(request)
-	repo_list = Repo.objects.order_by("name")
-	for repo in repo_list:
-		repo.url = repo.name.replace(' ' , '_')
-	context_dict = {'repos': repo_list}
-	return render_to_response('mainapp/index.html', context_dict, context)
+	response = render_to_response('mainapp/index.html', context)
+	if request.session.get('last_visit'):
+		last_visit_time = request.session.get('last_visit')
+		visits = request.session.get('visits', '0')
+		if (datetime.now() - datetime.strptime(last_visit_time[:-7], "%Y-%m-%d %H:%M:%S")).seconds > 5:
+			request.session['visits'] = visits + 1
+			request.session['last_visit'] = str(datetime.now())
+	else:
+		request.session['last_visit'] = str(datetime.now())
+		request.session['visits'] = 1
+	return response
+
 
 def dashboard(request, user_name_url): #render the index page
 	context = RequestContext(request)
