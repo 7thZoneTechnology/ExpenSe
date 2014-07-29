@@ -61,9 +61,9 @@
     <h2> Your Macros </h2>
     {% if macros %}
         <ul>
-            {% for macro in macros %}
+            {% for key, value in macros.items %}
             <!-- Following line changed to add an HTML hyperlink -->
-            <li>{{ macro.key }} : {{ macro.value }}</li>
+            <li>{{ key }} : {{ value }}</li>
             {% endfor %}
         </ul>
     {% endif %}

@@ -7,8 +7,31 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 
-#def decode(coded):
-
+def decodeExpense(coded, macros):
+	# get category
+	if not coded[0].isdigit():
+		category = macros[coded[0]]
+	else:
+		category = None
+	result = {'category':category}
+	# get amount
+	amount = ""
+	i = 1
+	while i < len(coded) and (coded[i].isdigit() or coded[i] == '.'):
+		amount += coded[i]
+		print amount
+		i += 1
+	
+	amount = float(amount)
+	result['amount'] = amount
+	i -= 1
+	# get name
+	name = coded[i:]
+	result['name'] = name
+	# get date
+	date = datetime.now()
+	result['date'] = date
+	return result
 
 def index(request): #render the index page
 	context = RequestContext(request)
@@ -25,18 +48,21 @@ def index(request): #render the index page
 	return response
 
 
-def dashboard(request, user_name_url): #render the index page
+def dashboard(request, user_name_url): 
 	context = RequestContext(request)
 	user_name = user_name_url.replace("_", " ")
 	repo_list = Repo.objects.filter(username=user_name)
+	# reconcile default and user set macros
+	macros = {}
 	standard_list = Macros.objects.filter(standard=True) # standard list of macros
-	#macro_list = Macros.objects.filter(user=user_name) # user list of macros
-	#for standard in standard_list:
-	#	for item in macro_list:
-	#		if item.key == standard.key:
-	#			standard.value = item.value
-	macros = standard_list
+	macro_list = Macros.objects.filter(username=user_name) # user list of macros
+	for item in macro_list:
+		macros[item.key] = item.value
+	for item in standard_list:
+		if item.key not in macros:
+			macros[item.key] = item.value
 	context_dict = {'macros': macros}
+	# list user's repos
 	for repo in repo_list:
 		repo.url = repo.name.replace(' ' , '_')
 	context_dict['repos'] = repo_list
@@ -44,13 +70,19 @@ def dashboard(request, user_name_url): #render the index page
 		if 'expense' in request.POST:
 			expense_form = ExpenseForm(request.POST)
 			if expense_form.is_valid():
-				expense_form.save(commit=False) 
-				parse_this = expense_form.cleaned_data['name'] #this is how I get the form input string
+				final_form = expense_form.save(commit=False) 
+				result = decodeExpense(str(expense_form.cleaned_data['name']), macros) #this is how I get the form input string
+				final_form.category = result['category']
+				final_form.amount = result['amount']
+				final_form.name = result['name']
+				final_form.date = result['date']
+				final_form.user = user_name
+				final_form.save()
 				repo_form = RepoForm()
+				macro_form = MacroForm()
 			else:
 				print expense_form.errors
 		elif 'repo' in request.POST:
-			print 'repo'
 			repo_form = RepoForm(request.POST)
 			if repo_form.is_valid():
 				name = repo_form.cleaned_data['name'] #this is how you get data
@@ -59,13 +91,30 @@ def dashboard(request, user_name_url): #render the index page
 				final_form.public = 'N'
 				final_form.save()
 				expense_form = ExpenseForm()
+				macro_form = MacroForm()
 			else:
 				print repo_form.errors
+		elif 'macro' in request.POST:
+			macro_form = MacroForm(request.POST)
+			if macro_form.is_valid():
+				user_input = macro_form.cleaned_data['key']
+				final_form = macro_form.save(commit=False)
+				final_form.username = user_name
+				final_form.key = user_input[0]
+				final_form.value = user_input[1:]
+				final_form.standard = False
+				final_form.save()
+				expense_form = ExpenseForm()
+				repo_form = RepoForm()
+			else:
+				print macro_form.errors
 	else:
 		expense_form = ExpenseForm()
 		repo_form = RepoForm()
+		macro_form = MacroForm()
 	context_dict['expense_form'] = expense_form
 	context_dict['repo_form'] = repo_form
+	context_dict['macro_form'] = macro_form
 	return render_to_response('mainapp/dashboard.html', context_dict, context)
 
 def repo(request, user_name_url, repo_name_url): #render each individual repo's page
