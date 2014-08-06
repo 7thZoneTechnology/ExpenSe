@@ -7,18 +7,18 @@
 {% if user.is_authenticated %}
         <h1>Welcome to your dashboard {{ user.username }}</h1>
 
-     <strong>Your repos</strong><br />
+     <h2>Your Expenses</h2><br />
 
 
-    {% if repos %}
+    {% if expenses %}
         <ul>
-            {% for repo in repos %}
+            {% for expense in expenses %}
             <!-- Following line changed to add an HTML hyperlink -->
-            <li><a href="/OutlayRT/{{ repo.url }}">{{ repo.name }}</a></li>
+            <li>{{ expense.name }} : ${{ expense.amount }} on {{ expense.date }}</li>
             {% endfor %}
         </ul>
     {% else %}
-        <strong>There are no repos present.</strong>
+        <strong>There are no expenses present.</strong>
     {% endif %}
 
     <h1>Add an Expense</h1>
@@ -37,25 +37,6 @@
         {% endfor %}
 
         <input type="submit" name="expense" value="Add Expense" />
-    </form>
-
-    <h1>Add a Repo</h1>
-
-    <form id="category_form" method="post" action="">
-
-        {% csrf_token %}
-        {% for hidden in repo_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in repo_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }} {{ field }}
-            
-        {% endfor %}
-        
-
-        <input type="submit" name="repo" value="add repo" />
     </form>
 
     <h2> Your Macros </h2>
@@ -84,7 +65,7 @@
         {% endfor %}
         
 
-        <input type="submit" name="repo" value="add macro" />
+        <input type="submit" name="macro" value="add macro" />
     </form>
 
 {% endif %}

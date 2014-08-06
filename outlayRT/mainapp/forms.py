@@ -1,11 +1,12 @@
 from django import forms
-from mainapp.models import Expenses, Repo, UserProfile, Macros
+from mainapp.models import Expenses, UserProfile, Macros
 from django.contrib.auth.models import User
 
 class ExpenseForm(forms.ModelForm):
 	date = forms.CharField(max_length=64, required=False, widget=forms.HiddenInput()) #what date the expense was entered
-	#description = forms.CharField(max_length=128, widget=forms.HiddenInput()) #description of the expense
-	category = forms.CharField(max_length=64, required=False, widget=forms.HiddenInput()) # ex. groceries, entertainment, etc.
+	description = forms.CharField(max_length=128, widget=forms.HiddenInput(), required=False) #description of the expense
+	username = forms.CharField(max_length=32, widget=forms.HiddenInput(), required=False)
+	name = forms.CharField(max_length=64, required=False, help_text="") # ex. groceries, entertainment, etc.
 	amount = forms.IntegerField(required=False, widget=forms.HiddenInput())
 	repo = forms.CharField(max_length=32, required=False, widget=forms.HiddenInput()) #name of the repo
 
@@ -13,13 +14,15 @@ class ExpenseForm(forms.ModelForm):
 		model = Expenses
 		fields = ('amount', 'repo', 'name')
 
-class RepoForm(forms.ModelForm):
-	name = forms.CharField(max_length=64, help_text="")
-	username = forms.CharField(max_length=128, widget=forms.HiddenInput(), required=False)
-	public = forms.CharField(max_length=1, widget=forms.HiddenInput(), required=False)
+class MacroForm(forms.ModelForm):
+	key = forms.CharField(max_length=1, widget=forms.HiddenInput(), required=False)
+	value = forms.CharField(max_length=32, help_text="")
+	username = forms.CharField(max_length=32, widget=forms.HiddenInput(), required=False)
+	standard = forms.BooleanField(widget=forms.HiddenInput(), required=False)
 	class Meta:
-		model = Repo
-		fields = ('name', )
+		model = Macros
+		fields = ('key', 'value', 'standard', 'username')
+
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput())
 	class Meta:
@@ -31,12 +34,4 @@ class UserProfileForm(forms.ModelForm):
 		model = UserProfile
 		fields = ('website', 'picture')
 
-class MacroForm(forms.ModelForm):
-	key = forms.CharField(max_length=32, help_text="")
-	value = forms.CharField(max_length=1, widget=forms.HiddenInput(), required=False)
-	username = forms.CharField(max_length=1, widget=forms.HiddenInput(), required=False)
-	standard = forms.BooleanField(widget=forms.HiddenInput(), required=False)
-	class Meta:
-		model = Macros
-		fields = ('key', 'value', 'standard', 'username')
 

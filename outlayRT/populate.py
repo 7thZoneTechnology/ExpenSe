@@ -9,9 +9,6 @@ standard_macros = { 'g': 'groceries',
 			}
 
 def populate():
-	for x in range(3):
-		Repo.objects.get_or_create(name="repo" + str(x), username="username", public="N")
-	#add test user
 	User.objects.get_or_create(username="testuser", password="password", email="rhc245@gmail.com", first_name="test", last_name="user")
 	#add standard macros
 	for key, value in standard_macros.iteritems():
@@ -20,6 +17,6 @@ def populate():
 if __name__ == "__main__" :
 	print "Starting outlay population script..."
 	os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'OutlayRT.settings')
-	from mainapp.models import Repo, Expenses, Macros, UserProfile
+	from mainapp.models import Expenses, Macros, UserProfile
 	from django.contrib.auth.models import User
 	populate()
