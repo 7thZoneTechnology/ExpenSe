@@ -29,11 +29,13 @@ Macros
 Features
 --------
 Implemented 
+
 1. Account creation and user login
 2. Add Expenses 
 3. Add macros 
 
 Need to implement
+
 1. edit and delete expenses and macros - Tuesday
 2. Input for budget and display dollars remaining/percentage of budget used - Wednesday
 3. Live update cost/day - Thursday
