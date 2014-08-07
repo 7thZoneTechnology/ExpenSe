@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class Expenses(models.Model):
-	#user_id = models.ForeignKey(User)
+	# user_id = models.ForeignKey(User)
 	expense_id = models.AutoField(primary_key=True)
 	username = models.CharField(max_length=32)
 	date = models.DateField(null=True) #what date the expense was entered
@@ -23,7 +23,7 @@ class UserProfile(models.Model):
 		return self.user.username
 
 class Macros(models.Model):
-	#user_id = models.ForeignKey(User)
+	# user_id = models.ForeignKey(User)
 	macro_id = models.AutoField(primary_key=True)
 	username = models.CharField(max_length=32, null=True) #who entered this expense
 	key = models.CharField(max_length=1)

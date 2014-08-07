@@ -12,7 +12,7 @@ class ExpenseForm(forms.ModelForm):
 
 	class Meta:
 		model = Expenses
-		fields = ('amount', 'repo', 'name')
+		fields = ('amount', 'repo', 'name', 'description')
 
 class MacroForm(forms.ModelForm):
 	key = forms.CharField(max_length=1, widget=forms.HiddenInput(), required=False)
@@ -22,6 +22,8 @@ class MacroForm(forms.ModelForm):
 	class Meta:
 		model = Macros
 		fields = ('key', 'value', 'standard', 'username')
+
+
 
 class UserForm(forms.ModelForm):
 	password = forms.CharField(widget=forms.PasswordInput())

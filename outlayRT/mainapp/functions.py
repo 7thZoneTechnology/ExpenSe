@@ -1,5 +1,8 @@
 from mainapp.models import Expenses, Macros
 from datetime import datetime
+from django.db.models import Q
+from django.core.exceptions import ObjectDoesNotExist
+
 def decodeExpense(coded, macros, user_name):
 	'''
 	Parses the user input for expense and stores the data 
@@ -49,6 +52,11 @@ def saveMacro(final_form, result):
 	final_form.key = result['key']
 	final_form.value = result['value']
 	final_form.standard = result['standard']
+	try:
+		Macros.objects.get(Q(key__exact=result['key']) & Q(username__exact=result['username']))
+		return True
+	except ObjectDoesNotExist:
+		return False
 
 def getMacros(user_name):
 	'''
@@ -67,3 +75,33 @@ def getMacros(user_name):
 
 def getExpenses(user_name):
 	return Expenses.objects.filter(username=user_name)
+
+def isInt(var):
+	try:
+		result = var == int(var)
+		return result
+	except ValueError:
+		return False
+
+def checkIfExpense(request):
+	for item in request:
+		if item.isdigit():
+			return item
+	return False
+
+def deleteExpense(id):
+	expense = Expenses.objects.get(expense_id__exact=id)
+	expense.delete()
+	return
+
+def checkIfMacro(request):
+	for item in request:
+		if len(item) == 1:
+			return item
+	return False
+
+def deleteMacro(key, username):
+	macro = Macros.objects.get(Q(key__exact=key), Q(username__exact=username))
+	if macro.standard == False:
+		macro.delete()
+	return

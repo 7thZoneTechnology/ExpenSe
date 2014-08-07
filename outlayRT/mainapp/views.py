@@ -5,7 +5,7 @@ from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from functions import decodeExpense, saveExpense, decodeMacro, saveMacro, getMacros, getExpenses
+from functions import decodeExpense, saveExpense, decodeMacro, saveMacro, getMacros, getExpenses, checkIfExpense, deleteExpense, checkIfMacro, deleteMacro
 
 def index(request): #render the index page
 	context = RequestContext(request)
@@ -25,12 +25,11 @@ def index(request): #render the index page
 def dashboard(request, user_name_url): 
 	context = RequestContext(request)
 	user_name = user_name_url.replace("_", " ")
+	context_dict = {}
 
 	macros = getMacros(user_name)
-	# for key, value in macros.items():
-	#	print key, ',', value
 	expenses = getExpenses(user_name)
-	context_dict = {'macros': macros}
+	context_dict['macros'] = macros
 	context_dict['expenses'] = expenses
 
 	if request.method =='POST':
@@ -51,13 +50,25 @@ def dashboard(request, user_name_url):
 				user_input = macro_form.cleaned_data['value']
 				result = decodeMacro(user_input, user_name)
 				saveMacro(final_form, result)
-				final_form.save()
+				if not saveMacro(final_form, result):
+					final_form.save()
 			else:
 				print macro_form.errors
+		elif checkIfExpense(request.POST):
+			deleteExpense(checkIfExpense(request.POST))
+		elif checkIfMacro(request.POST):
+			deleteMacro(checkIfMacro(request.POST), user_name)
+
+
 	expense_form = ExpenseForm()
 	macro_form = MacroForm()
+
 	context_dict['expense_form'] = expense_form
 	context_dict['macro_form'] = macro_form
+
+	macros = getMacros(user_name)
+	context_dict['macros'] = macros
+
 	return render_to_response('mainapp/dashboard.html', context_dict, context)
 
 

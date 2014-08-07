@@ -33,10 +33,11 @@ Implemented
 1. Account creation and user login
 2. Add Expenses 
 3. Add macros 
+4. Ability to delete Expenses and Macros
 
 Need to implement
 
-1. edit and delete expenses and macros - Tuesday
+1. Individual editing page for each expense & fix data queries to use foreign keys
 2. Input for budget and display dollars remaining/percentage of budget used - Wednesday
 3. Live update cost/day - Thursday
 4. Bootstrap & design - Friday (get Karen to advise on this)
@@ -47,4 +48,5 @@ Need to implement
 Log
 ----
 2014/08/05 - Took out repos, refactored code, live updated of expenses and macros
+2014/08/06 - Ability to delete Expenses and Macros
 
