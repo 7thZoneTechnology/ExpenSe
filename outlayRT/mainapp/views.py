@@ -1,13 +1,89 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm 
+from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm, ExpenseEditForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from functions import decodeExpense, saveExpense, decodeMacro, saveMacro, getMacros, getExpenses, checkIfExpense, deleteExpense, checkIfMacro, deleteMacro
+from helpers import checkIfExpense, checkIfMacro
+from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro
 
-def index(request): #render the index page
+@login_required
+def dashboard(request, user_name_url): 
+	context = RequestContext(request)
+	user_name = user_name_url.replace("_", " ")
+	context_dict = {}
+
+	# get User's macros and expenses
+	macros = readMacro(user_name)
+	context_dict['macros'] = macros
+
+	# deal with Create and Delete operations on macros & Exoense
+	if request.method =='POST':
+		if 'expense' in request.POST:
+			expense_form = ExpenseForm(request.POST)
+			if expense_form.is_valid():
+				final_form = expense_form.save(commit=False)
+				createExpense(expense_form.cleaned_data['name'], macros, user_name, final_form) 
+				final_form.save()
+			else:
+				print expense_form.errors
+		elif 'macro' in request.POST:
+			macro_form = MacroForm(request.POST)
+			if macro_form.is_valid():
+				final_form = macro_form.save(commit=False)				
+				user_input = macro_form.cleaned_data['value']
+				# user cannot delete pre-set macros
+				if not createMacro(macro_form.cleaned_data['value'], user_name, final_form):
+					final_form.save() 
+			else:
+				print macro_form.errors
+		elif checkIfExpense(request.POST):
+			deleteExpense(checkIfExpense(request.POST))
+		elif checkIfMacro(request.POST):
+			deleteMacro(checkIfMacro(request.POST), user_name)
+
+	expenses = readExpense("filter", user_name=user_name)
+	context_dict['expenses'] = expenses
+
+	# clear the forms after submission
+	expense_form = ExpenseForm()
+	macro_form = MacroForm()
+	context_dict['expense_form'] = expense_form
+	context_dict['macro_form'] = macro_form
+
+	# update macro list, expense list updates itself for some reason
+	macros = readMacro(user_name)
+	context_dict['macros'] = macros
+
+	return render_to_response('mainapp/dashboard.html', context_dict, context)
+
+@login_required
+def edit_expense(request, user_name_url, expense_id_url):
+	context = RequestContext(request)
+	user_name = user_name_url.replace('_', ' ')
+	expense_id = expense_id_url.replace('_', ' ')
+	
+	if request.method =='POST':
+		if 'expense' in request.POST:
+			expense_form = ExpenseForm(request.POST)
+			if expense_form.is_valid():
+				final_form = expense_form.save(commit=False)
+				updateExpense(expense_form, expense_id)
+			else:
+				print expense_form.errors
+
+	expense = readExpense("get", id=expense_id)
+	context_dict = {'expense' : expense}
+
+	expense_form = ExpenseEditForm()
+	context_dict['expense_form'] = expense_form
+
+	return render_to_response('mainapp/edit_expense.html', context_dict, context)
+
+
+
+def index(request): 
 	context = RequestContext(request)
 	response = render_to_response('mainapp/index.html', context)
 	if request.session.get('last_visit'):
@@ -20,56 +96,6 @@ def index(request): #render the index page
 		request.session['last_visit'] = str(datetime.now())
 		request.session['visits'] = 1
 	return response
-
-@login_required
-def dashboard(request, user_name_url): 
-	context = RequestContext(request)
-	user_name = user_name_url.replace("_", " ")
-	context_dict = {}
-
-	macros = getMacros(user_name)
-	expenses = getExpenses(user_name)
-	context_dict['macros'] = macros
-	context_dict['expenses'] = expenses
-
-	if request.method =='POST':
-		if 'expense' in request.POST:
-			expense_form = ExpenseForm(request.POST)
-			if expense_form.is_valid():
-				final_form = expense_form.save(commit=False)
-				coded = expense_form.cleaned_data['name']
-				result = decodeExpense(coded, macros, user_name) 
-				saveExpense(final_form, result)	
-				final_form.save()
-			else:
-				print expense_form.errors
-		elif 'macro' in request.POST:
-			macro_form = MacroForm(request.POST)
-			if macro_form.is_valid():
-				final_form = macro_form.save(commit=False)				
-				user_input = macro_form.cleaned_data['value']
-				result = decodeMacro(user_input, user_name)
-				saveMacro(final_form, result)
-				if not saveMacro(final_form, result):
-					final_form.save()
-			else:
-				print macro_form.errors
-		elif checkIfExpense(request.POST):
-			deleteExpense(checkIfExpense(request.POST))
-		elif checkIfMacro(request.POST):
-			deleteMacro(checkIfMacro(request.POST), user_name)
-
-
-	expense_form = ExpenseForm()
-	macro_form = MacroForm()
-
-	context_dict['expense_form'] = expense_form
-	context_dict['macro_form'] = macro_form
-
-	macros = getMacros(user_name)
-	context_dict['macros'] = macros
-
-	return render_to_response('mainapp/dashboard.html', context_dict, context)
 
 
 # User registration and login views

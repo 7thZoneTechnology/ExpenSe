@@ -34,19 +34,20 @@ Implemented
 2. Add Expenses 
 3. Add macros 
 4. Ability to delete Expenses and Macros
+5. Individual editing page for each expense & fix data queries to use foreign keys
 
 Need to implement
 
-1. Individual editing page for each expense & fix data queries to use foreign keys
-2. Input for budget and display dollars remaining/percentage of budget used - Wednesday
-3. Live update cost/day - Thursday
-4. Bootstrap & design - Friday (get Karen to advise on this)
-5. Examine features and fiddle with performance - Saturday
-6. Deploy and writeup - Sunday
+2. Input for budget and display dollars remaining/percentage of budget used 
+3. Live update cost/day (Think about graphs here as well, how to display above data as graphs) 
+4. Bootstrap & design 
+5. Reevaluate features, refactpr code and fiddle with performance 
+6. Deploy and writeup 
 7. Begin mobile app development
 
 Log
 ----
 2014/08/05 - Took out repos, refactored code, live updated of expenses and macros
 2014/08/06 - Ability to delete Expenses and Macros
+2014/08/08 - Individual editing page for each expense & fix data model & queries to use foreign keys to relate tables
 

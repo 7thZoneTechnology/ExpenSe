@@ -1,11 +1,17 @@
 from django.db import models
 from django.contrib.auth.models import User
-# Create your models here.
+
+class UserProfile(models.Model):
+	id = models.AutoField(primary_key=True)
+	user = models.OneToOneField(User)
+	website = models.URLField(blank=True)
+	picture = models.ImageField(upload_to='profile_images', blank=True)
+	def __unicode__(self):
+		return self.user.username
 
 class Expenses(models.Model):
-	# user_id = models.ForeignKey(User)
+	user_id = models.ForeignKey(UserProfile)
 	expense_id = models.AutoField(primary_key=True)
-	username = models.CharField(max_length=32)
 	date = models.DateField(null=True) #what date the expense was entered
 	description = models.CharField(max_length=128, null=True) #description of the expense
 	amount = models.FloatField()
@@ -15,20 +21,12 @@ class Expenses(models.Model):
 	def __unicode__(self):
 		return self.name
 
-class UserProfile(models.Model):
-	user = models.OneToOneField(User)
-	website = models.URLField(blank=True)
-	picture = models.ImageField(upload_to='profile_images', blank=True)
-	def __unicode__(self):
-		return self.user.username
-
 class Macros(models.Model):
-	# user_id = models.ForeignKey(User)
+	user_id = models.ForeignKey(UserProfile, null=True)
 	macro_id = models.AutoField(primary_key=True)
-	username = models.CharField(max_length=32, null=True) #who entered this expense
 	key = models.CharField(max_length=1)
 	value = models.CharField(max_length=32)
-	standard = models.BooleanField()
+	# standard = models.BooleanField()
 	def __unicode__(self):
 		return self.key
 

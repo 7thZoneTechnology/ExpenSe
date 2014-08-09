@@ -7,15 +7,15 @@
 {% if user.is_authenticated %}
         <h1>Welcome to your dashboard {{ user.username }}</h1>
 
-     <h2>Your Expenses</h2><br />
+     <h2>Your Expenses</h2>
 
 
     {% if expenses %}
         <ul>
             {% for expense in expenses %}
             <!-- Following line changed to add an HTML hyperlink -->
-            <li>{{ expense.name }} : ${{ expense.amount }} on {{ expense.date }} ID: {{ expense.expense_id }}</li>
-            <form id="edit_expense" method="post">
+            <li><a href= {{ expense.expense_id }}>{{ expense.name }} : ${{ expense.amount }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</a></li>
+            <form id="delete_expense" method="post">
                 {% csrf_token %}
                 <input type="submit" name={{ expense.expense_id }} value="delete expense" />
             </form>
@@ -49,7 +49,7 @@
             {% for key, value in macros.items %}
             <!-- Following line changed to add an HTML hyperlink -->
             <li>{{ key }} : {{ value }}</li>
-            <form id="edit_expense" method="post">
+            <form id="delete_macro" method="post">
                 {% csrf_token %}
                 <input type="submit" name={{ key }} value="delete macro" />
             </form>

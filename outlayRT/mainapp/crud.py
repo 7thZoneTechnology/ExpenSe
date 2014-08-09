@@ -1,4 +1,5 @@
 from mainapp.models import Expenses, Macros, UserProfile
+from django.contrib.auth.models import User
 from datetime import datetime
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
@@ -47,13 +48,13 @@ def createMacro(user_input, user_name, final_form):
 	except ObjectDoesNotExist:
 		return False
 
-def readMacros(user_name):
+def readMacro(user_name):
 	'''
 	Returns a dictionary of standard and user set
 	macros with user set macros overwriting standard ones
 	'''
 	macros = {}
-	standard_list = Macros.objects.filter(standard=True) # standard list of macros
+	standard_list = Macros.objects.filter(user_id=None) # standard list of macros
 	
 	macro_list = Macros.objects.filter(user_id=getUserId(user_name)) # user list of macros
 	for item in macro_list:
@@ -63,37 +64,43 @@ def readMacros(user_name):
 			macros[item.key] = item.value
 	return macros
 
-def readExpenses(user_name=None, id=None, command):
+def readExpense(command, user_name=None, id=None):
 	if command == "filter":
 		return Expenses.objects.filter(user_id=getUserId(user_name))
 	elif command =="get":
 		return Expenses.objects.get(expense_id__exact=id)
 
-def getUserId(user_name):
-	return getUserId(user_name)
+def updateExpense(form , id):
+	expense = Expenses.objects.get(expense_id=id)
+	if form.cleaned_data['amount']:
+		expense.amount = form.cleaned_data['amount']
+	if len(form.cleaned_data['date']) > 0:
+		expense.date = form.cleaned_data['date']
+	if len(form.cleaned_data['name']) > 0:
+		expense.name = form.cleaned_data['name']
+	if len(form.cleaned_data['description']) > 0:
+		expense.description = form.cleaned_data['description']
+	expense.save()
+	
 
-def checkIfExpense(request):
-	for item in request:
-		if item.isdigit():
-			return item
-	return False
+def updateMacro():
+	pass
 
 def deleteExpense(id):
 	expense = Expenses.objects.get(expense_id__exact=id)
 	expense.delete()
-	return
-
-def checkIfMacro(request):
-	for item in request:
-		if len(item) == 1:
-			return item
-	return False
 
 def deleteMacro(key, username):
-	macro = Macros.objects.get(Q(key__exact=key), Q(username__exact=username))
-	if macro.standard == False:
+	# print key, getUserId(username)
+	try:
+		macro = Macros.objects.get(Q(key__exact=key), Q(user_id=getUserId(username)))
 		macro.delete()
-	return
+	except ObjectDoesNotExist:
+		print "Preset"
+	
+# helper functions
+def getUserId(user_name):
+	return UserProfile.objects.get(user__username=user_name)
 
-def getExpenseInfo(id):
-	return Expenses.objects.get(expense_id__exact=id)
+
+
