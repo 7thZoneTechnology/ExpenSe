@@ -5,7 +5,7 @@ from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm, Exp
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from helpers import checkIfExpense, checkIfMacro
+from helpers import checkIfExpense, checkIfMacro, getBudgetUsed, costPerDay
 from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro, readBudget, createBudget, deleteBudget
 
 @login_required
@@ -47,8 +47,10 @@ def dashboard(request, user_name_url):
 			deleteExpense(checkIfExpense(request.POST))
 		elif checkIfMacro(request.POST):
 			deleteMacro(checkIfMacro(request.POST), user_name)
-	
+	context_dict['used'] = getBudgetUsed(user_name)
 	context_dict['budget'] = readBudget(user_name)
+	context_dict['percentage'] = str(getBudgetUsed(user_name)/readBudget(user_name).budget).split('.')[1][:2]
+	context_dict['perday'] = costPerDay(user_name)
 	context_dict['expenses'] = readExpense("filter", user_name=user_name)
 	context_dict['macros'] = readMacro(user_name)
 	context_dict['budget_form'] = BudgetForm()

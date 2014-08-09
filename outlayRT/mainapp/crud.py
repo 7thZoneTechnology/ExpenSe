@@ -34,6 +34,28 @@ def createExpense(coded, macros, user_name, final_form):
 	# get user id
 	final_form.user_id = getUserId(user_name)
 
+def readExpense(command, user_name=None, id=None):
+	if command == "filter":
+		return Expenses.objects.filter(user_id=getUserId(user_name))
+	elif command =="get":
+		return Expenses.objects.get(expense_id__exact=id)
+
+def updateExpense(form , id):
+	expense = Expenses.objects.get(expense_id=id)
+	if form.cleaned_data['amount']:
+		expense.amount = form.cleaned_data['amount']
+	if len(form.cleaned_data['date']) > 0:
+		expense.date = form.cleaned_data['date']
+	if len(form.cleaned_data['name']) > 0:
+		expense.name = form.cleaned_data['name']
+	if len(form.cleaned_data['description']) > 0:
+		expense.description = form.cleaned_data['description']
+	expense.save()
+
+def deleteExpense(id):
+	expense = Expenses.objects.get(expense_id__exact=id)
+	expense.delete()
+
 def createMacro(user_input, user_name, final_form):
 	'''
 	Parses the user input for a macro and prepares 
@@ -48,6 +70,22 @@ def createMacro(user_input, user_name, final_form):
 		return True
 	except ObjectDoesNotExist:
 		return False
+
+def readMacro(user_name):
+	'''
+	Returns a dictionary of standard and user set
+	macros with user set macros overwriting standard ones
+	'''
+	macros = {}
+	standard_list = Macros.objects.filter(user_id=None) # standard list of macros
+	
+	macro_list = Macros.objects.filter(user_id=getUserId(user_name)) # user list of macros
+	for item in macro_list:
+		macros[item.key] = item.value
+	for item in standard_list:
+		if item.key not in macros:
+			macros[item.key] = item.value
+	return macros
 
 def createBudget(user_input, final_form, user_name):
 	if readBudget(user_name):
@@ -87,47 +125,11 @@ def deleteBudget(user_name):
 	budget = Budget.objects.get(user_id=getUserId(user_name))
 	budget.delete()
 	
-def readMacro(user_name):
-	'''
-	Returns a dictionary of standard and user set
-	macros with user set macros overwriting standard ones
-	'''
-	macros = {}
-	standard_list = Macros.objects.filter(user_id=None) # standard list of macros
-	
-	macro_list = Macros.objects.filter(user_id=getUserId(user_name)) # user list of macros
-	for item in macro_list:
-		macros[item.key] = item.value
-	for item in standard_list:
-		if item.key not in macros:
-			macros[item.key] = item.value
-	return macros
-
-def readExpense(command, user_name=None, id=None):
-	if command == "filter":
-		return Expenses.objects.filter(user_id=getUserId(user_name))
-	elif command =="get":
-		return Expenses.objects.get(expense_id__exact=id)
-
-def updateExpense(form , id):
-	expense = Expenses.objects.get(expense_id=id)
-	if form.cleaned_data['amount']:
-		expense.amount = form.cleaned_data['amount']
-	if len(form.cleaned_data['date']) > 0:
-		expense.date = form.cleaned_data['date']
-	if len(form.cleaned_data['name']) > 0:
-		expense.name = form.cleaned_data['name']
-	if len(form.cleaned_data['description']) > 0:
-		expense.description = form.cleaned_data['description']
-	expense.save()
 	
 
 def updateMacro():
 	pass
 
-def deleteExpense(id):
-	expense = Expenses.objects.get(expense_id__exact=id)
-	expense.delete()
 
 def deleteMacro(key, username):
 	# print key, getUserId(username)

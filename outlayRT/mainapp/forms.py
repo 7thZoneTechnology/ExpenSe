@@ -33,7 +33,7 @@ class ExpenseEditForm(forms.ModelForm):
 		fields = ('amount', 'date', 'name', 'description')
 
 class BudgetForm(forms.ModelForm):
-	input = forms.CharField(max_length=10, required=False, help_text="Input")
+	input = forms.CharField(max_length=10, required=False, help_text="")
 	create_date = forms.DateField(widget=forms.HiddenInput(), required=False)
 	class Meta:
 		model = Budget

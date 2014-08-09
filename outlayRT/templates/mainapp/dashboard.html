@@ -9,8 +9,11 @@
 
     <h2>Monthly Budget</h2>
     {% if budget %}
-        <h4>{{ budget.budget }}</h4>
-        <h5>Will reset on: {{ budget.latest_date }}</h5>
+        <h3>${{ budget.budget|floatformat:2 }}</h3>
+        <h3>Will reset on: {{ budget.latest_date }}</h3>
+        <h3>Used so far: ${{ used|floatformat:2 }}</h3>
+        <h3>Percentage used: {{ percentage }}%</h3>
+        <h3>Cost/day: ${{ perday|floatformat:2 }}/day<h3>
         <form id="delete_budget" method="post">
                 {% csrf_token %}
                 <input type="submit" name="delete_budget" value="delete budget" />
