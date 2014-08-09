@@ -7,14 +7,39 @@
 {% if user.is_authenticated %}
         <h1>Welcome to your dashboard {{ user.username }}</h1>
 
-     <h2>Your Expenses</h2>
+    <h2>Monthly Budget</h2>
+    {% if budget %}
+        <h4>{{ budget.budget }}</h4>
+        <h5>Will reset on: {{ budget.latest_date }}</h5>
+        <form id="delete_budget" method="post">
+                {% csrf_token %}
+                <input type="submit" name="delete_budget" value="delete budget" />
+            </form>
+    {% endif %}
+    <form id="budget_form" method="post" action="">
 
+        {% csrf_token %}
+        {% for hidden in budget_form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        {% for field in budget_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}
+            {{ field }}
+        {% endfor %}
+
+        <input type="submit" name="budget" value="add budget" />
+    </form>
+
+
+     <h2>Your Expenses</h2>
 
     {% if expenses %}
         <ul>
             {% for expense in expenses %}
             <!-- Following line changed to add an HTML hyperlink -->
-            <li><a href= {{ expense.expense_id }}>{{ expense.name }} : ${{ expense.amount }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</a></li>
+            <li><a href= {{ expense.expense_id }}>{{ expense.name }} : ${{ expense.amount|floatformat:2 }} on {{ expense.date }} ID:{{ expense.expense_id }} Description: {{ expense.description }}</a></li>
             <form id="delete_expense" method="post">
                 {% csrf_token %}
                 <input type="submit" name={{ expense.expense_id }} value="delete expense" />

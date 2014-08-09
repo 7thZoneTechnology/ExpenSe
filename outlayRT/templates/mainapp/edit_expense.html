@@ -8,7 +8,7 @@
 
     <h2><a href=".">Back to dashboard</a></h2>
 
-    <h3>{{ expense.name }} : ${{ expense.amount }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</h3>
+    <h3>{{ expense.name }} : ${{ expense.amount|floatformat:2 }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</h3>
     
     <form id="category_form" method="post" action="">
 

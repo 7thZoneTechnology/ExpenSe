@@ -1,26 +1,29 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import RequestContext
 from django.shortcuts import render_to_response
-from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm, ExpenseEditForm
+from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm, ExpenseEditForm, BudgetForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from helpers import checkIfExpense, checkIfMacro
-from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro
+from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro, readBudget, createBudget, deleteBudget
 
 @login_required
 def dashboard(request, user_name_url): 
 	context = RequestContext(request)
 	user_name = user_name_url.replace("_", " ")
-	context_dict = {}
 
-	# get User's macros and expenses
-	macros = readMacro(user_name)
-	context_dict['macros'] = macros
-
-	# deal with Create and Delete operations on macros & Exoense
+	context_dict = {'macros': readMacro(user_name)}
 	if request.method =='POST':
-		if 'expense' in request.POST:
+		if 'budget' in request.POST:
+			budget_form = BudgetForm(request.POST)
+			if budget_form.is_valid():
+				final_form = budget_form.save(commit=False)
+				if createBudget(budget_form.cleaned_data['input'], final_form, user_name):
+					final_form.save()
+			else:
+				print budget_form.errors
+		elif 'expense' in request.POST:
 			expense_form = ExpenseForm(request.POST)
 			if expense_form.is_valid():
 				final_form = expense_form.save(commit=False)
@@ -38,24 +41,19 @@ def dashboard(request, user_name_url):
 					final_form.save() 
 			else:
 				print macro_form.errors
+		elif 'delete_budget' in request.POST:
+			deleteBudget(user_name)
 		elif checkIfExpense(request.POST):
 			deleteExpense(checkIfExpense(request.POST))
 		elif checkIfMacro(request.POST):
 			deleteMacro(checkIfMacro(request.POST), user_name)
-
-	expenses = readExpense("filter", user_name=user_name)
-	context_dict['expenses'] = expenses
-
-	# clear the forms after submission
-	expense_form = ExpenseForm()
-	macro_form = MacroForm()
-	context_dict['expense_form'] = expense_form
-	context_dict['macro_form'] = macro_form
-
-	# update macro list, expense list updates itself for some reason
-	macros = readMacro(user_name)
-	context_dict['macros'] = macros
-
+	
+	context_dict['budget'] = readBudget(user_name)
+	context_dict['expenses'] = readExpense("filter", user_name=user_name)
+	context_dict['macros'] = readMacro(user_name)
+	context_dict['budget_form'] = BudgetForm()
+	context_dict['expense_form'] = ExpenseForm()
+	context_dict['macro_form'] = MacroForm()
 	return render_to_response('mainapp/dashboard.html', context_dict, context)
 
 @login_required

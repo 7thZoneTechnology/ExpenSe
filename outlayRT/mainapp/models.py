@@ -30,6 +30,15 @@ class Macros(models.Model):
 	def __unicode__(self):
 		return self.key
 
+class Budget(models.Model):
+	# budget_id = models.AutoField(primary_key=True)
+	user_id = models.ForeignKey(UserProfile, null=True)
+	budget = models.FloatField(null=True)
+	create_date = models.DateField(null=True)
+	latest_date = models.DateField(null=True)
+	def __unicode__(self):
+		return "Budget"
+
 '''
 class Repo(models.Model):
 	#user_id = models.ForeignKey(User)

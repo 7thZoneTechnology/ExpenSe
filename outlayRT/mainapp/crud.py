@@ -1,6 +1,7 @@
-from mainapp.models import Expenses, Macros, UserProfile
+from mainapp.models import Expenses, Macros, UserProfile, Budget
 from django.contrib.auth.models import User
-from datetime import datetime
+from datetime import datetime, date
+from monthdelta import MonthDelta
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -48,6 +49,44 @@ def createMacro(user_input, user_name, final_form):
 	except ObjectDoesNotExist:
 		return False
 
+def createBudget(user_input, final_form, user_name):
+	if readBudget(user_name):
+ 		updateBudget(readBudget(user_name), user_input)
+	final_form.create_date = date.today()
+	final_form.latest_date = date.today() + MonthDelta(1)
+	try:
+		final_form.budget = float(user_input)
+	except ValueError:
+		return False
+	final_form.user_id = getUserId(user_name)
+	return True
+
+def readBudget(user_name):
+	'''returns a tuple
+	of budget, budget_date
+	for a given user'''
+	try:
+		budget = Budget.objects.get(user_id=getUserId(user_name))
+		today = date.today()
+		if (today == budget.latest_date):
+			budget.latest_date = today + MonthDelta(1)
+			budget.save()
+		return Budget.objects.get(user_id=getUserId(user_name))
+	except ObjectDoesNotExist:
+		return None
+	
+def updateBudget(budget, user_input):
+	try:
+		budget.budget = float(user_input)
+	except ValueError:
+		return False
+	budget.save()
+	return True
+
+def deleteBudget(user_name):
+	budget = Budget.objects.get(user_id=getUserId(user_name))
+	budget.delete()
+	
 def readMacro(user_name):
 	'''
 	Returns a dictionary of standard and user set
