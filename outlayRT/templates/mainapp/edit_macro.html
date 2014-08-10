@@ -1,0 +1,44 @@
+{% extends 'mainapp/base.html' %}
+
+{% block title %}{{ "OutlayRT" }}{% endblock %}
+
+{% block body_block %}
+    
+    <h1>Edit macros</h1>
+
+    <h2><a href=".">Back to dashboard</a></h2>
+
+    <div class="container center">
+        {% if macros %}
+            <ul class="list-inline">
+                <li class="macro">Your Macros: </li>
+                {% for key, value in macros.items %}
+                <!-- Following line changed to add an HTML hyperlink -->
+                <li class="macro">{{ key }} = {{ value }}</li>
+                <!--
+                <form id="delete_macro" method="post">
+                    {% csrf_token %}
+                    <input type="submit" name={{ key }} value="delete macro" />
+                </form>
+                -->
+                {% endfor %}
+            </ul>
+        {% endif %}
+        </div>
+    
+    <li>Add a Macro</h1>
+            <form id="category_form" method="post" action="">
+                {% csrf_token %}
+                {% for hidden in macro_form.hidden_fields %}
+                    {{ hidden }}
+                {% endfor %}
+                {% for field in macro_form.visible_fields %}
+                    {{ field.errors }}
+                    {{ field.help_text }} {{ field }}                
+                {% endfor %}
+                <input type="submit" name="macro" value="add macro" />
+            </form>
+    </form>
+    
+
+{% endblock %}

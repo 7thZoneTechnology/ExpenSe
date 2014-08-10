@@ -44,11 +44,11 @@ def updateExpense(form , id):
 	expense = Expenses.objects.get(expense_id=id)
 	if form.cleaned_data['amount']:
 		expense.amount = form.cleaned_data['amount']
-	if len(form.cleaned_data['date']) > 0:
+	if form.cleaned_data['date']:
 		expense.date = form.cleaned_data['date']
-	if len(form.cleaned_data['name']) > 0:
+	if form.cleaned_data['name']:
 		expense.name = form.cleaned_data['name']
-	if len(form.cleaned_data['description']) > 0:
+	if form.cleaned_data['description']:
 		expense.description = form.cleaned_data['description']
 	expense.save()
 
@@ -89,7 +89,7 @@ def readMacro(user_name):
 
 def createBudget(user_input, final_form, user_name):
 	if readBudget(user_name):
- 		updateBudget(readBudget(user_name), user_input)
+ 		return updateBudget(readBudget(user_name), user_input)
 	final_form.create_date = date.today()
 	final_form.latest_date = date.today() + MonthDelta(1)
 	try:

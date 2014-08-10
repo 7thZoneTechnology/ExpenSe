@@ -1,26 +1,36 @@
 <!DOCTYPE html>
-
+{% load static %}
 <html>
     <head>
         <title>OutlayRT - {% block title %} Hack Personal Finance! {% endblock %}</title>
+        <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
     </head>
 
     <body>
-    	<div>
-        	{% block body_block %} This is body_block's default content {% endblock %}
-    	</div>
-    	<hr />
-    	<div>
-    		<ul>
-    		{% if user.is_authenticated %}
-    			<li><a href="/OutlayRT/restricted/">Restricted Page</a></li>
-                <li><a href="/OutlayRT/logout">Logout</a></li>
-            {% else %}
-            	<li><a href="/OutlayRT/register/">Register Here</a></li>
-                <li><a href="/OutlayRT/login/">Login</a></li>
-            {% endif %}
-                <li><a href="/OutlayRT/about/">About</a></li>
-            </ul>
-        </div>
+        
+            <nav class="navbar navbar-fixed-top" role="navigation">           
+                <div class="container">
+                  <ul class="nav navbar-nav">
+                    {% if user.is_authenticated %}
+                        <li><a href="./macro">Macros</a></li>
+                        <li><a href="./budget">Budget</a></li>
+                        <li><a href="/OutlayRT/logout">Logout</a></li>
+                    {% else %}
+                        <li><a href="/OutlayRT/register/">Register Here</a></li>
+                        <li><a href="/OutlayRT/login/">Login</a></li>
+                    {% endif %}
+                        <li><a href="/OutlayRT/about/">About</a></li>
+                    </ul>
+                </div>               
+            </nav>
+            
+            	{% block body_block %} This is body_block's default content {% endblock %}      	
+            
+        
+        <script src="{% static 'js/bootstrap.js' %}"></script>
+        <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+        
+
     </body>
 </html>

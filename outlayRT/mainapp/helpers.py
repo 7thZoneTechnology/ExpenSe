@@ -50,3 +50,7 @@ def costPerDay(user_name):
 	if days == 0:
 		return amount
 	return amount/days
+
+def getPercentage(user_name):
+	fraction = getBudgetUsed(user_name)/readBudget(user_name).budget
+	return fraction*100

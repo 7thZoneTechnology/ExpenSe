@@ -1,0 +1,36 @@
+{% extends 'mainapp/base.html' %}
+
+{% block title %}{{ "OutlayRT" }}{% endblock %}
+
+{% block body_block %}
+
+<div class="container">
+    <h1>Update Expense</h1>
+
+    <h2><a href=".">Back to dashboard</a></h2>
+
+    <h3>{{ expense.name }} : ${{ expense.amount|floatformat:2 }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</h3>
+    
+    <form id="category_form" method="post" action="">
+
+        {% csrf_token %}
+        {% for hidden in expense_form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+
+        {% for field in expense_form.visible_fields %}
+            {{ field.errors }}
+            {{ field.help_text }}
+            {{ field }}
+        {% endfor %}
+
+        <input type="submit" name="expense" value="Update Expense" />
+    </form>
+
+    <form id="delete_expense" method="post">
+        {% csrf_token %}
+        <input type="submit" name={{ expense.expense_id }} value="delete expense" />
+    </form>
+</div>
+
+{% endblock %}

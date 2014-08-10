@@ -5,104 +5,87 @@
 {% block body_block %}
 
 {% if user.is_authenticated %}
-        <h1>Welcome to your dashboard {{ user.username }}</h1>
+    <div class="jumbotron">
+        <div class="container">
+            <div class="col-md-4">
+                <h2>CPD: {{ perday|floatformat:2 }}</h2>
+                <h3>Add an Expense</h3>
+                <form id="category_form" method="post" action="">
 
-    <h2>Monthly Budget</h2>
-    {% if budget %}
-        <h3>${{ budget.budget|floatformat:2 }}</h3>
-        <h3>Will reset on: {{ budget.latest_date }}</h3>
-        <h3>Used so far: ${{ used|floatformat:2 }}</h3>
-        <h3>Percentage used: {{ percentage }}%</h3>
-        <h3>Cost/day: ${{ perday|floatformat:2 }}/day<h3>
-        <form id="delete_budget" method="post">
-                {% csrf_token %}
-                <input type="submit" name="delete_budget" value="delete budget" />
-            </form>
-    {% endif %}
-    <form id="budget_form" method="post" action="">
+                    {% csrf_token %}
+                    {% for hidden in expense_form.hidden_fields %}
+                        {{ hidden }}
+                    {% endfor %}
 
-        {% csrf_token %}
-        {% for hidden in budget_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in budget_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-
-        <input type="submit" name="budget" value="add budget" />
-    </form>
-
-
-     <h2>Your Expenses</h2>
-
-    {% if expenses %}
-        <ul>
-            {% for expense in expenses %}
-            <!-- Following line changed to add an HTML hyperlink -->
-            <li><a href= {{ expense.expense_id }}>{{ expense.name }} : ${{ expense.amount|floatformat:2 }} on {{ expense.date }} ID:{{ expense.expense_id }} Description: {{ expense.description }}</a></li>
-            <form id="delete_expense" method="post">
-                {% csrf_token %}
-                <input type="submit" name={{ expense.expense_id }} value="delete expense" />
-            </form>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <strong>There are no expenses present.</strong>
-    {% endif %}
-
-    <h1>Add an Expense</h1>
-
-    <form id="category_form" method="post" action="">
-
-        {% csrf_token %}
-        {% for hidden in expense_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in expense_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-
-        <input type="submit" name="expense" value="add expense" />
-    </form>
-
-    <h2> Your Macros </h2>
-    {% if macros %}
-        <ul>
-            {% for key, value in macros.items %}
-            <!-- Following line changed to add an HTML hyperlink -->
-            <li>{{ key }} : {{ value }}</li>
-            <form id="delete_macro" method="post">
-                {% csrf_token %}
-                <input type="submit" name={{ key }} value="delete macro" />
-            </form>
-            {% endfor %}
-        </ul>
-    {% endif %}
-
-    <h1>Add a Macro</h1>
-
-    <form id="category_form" method="post" action="">
-
-        {% csrf_token %}
-        {% for hidden in macro_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in macro_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }} {{ field }}
-            
-        {% endfor %}
+                    {% for field in expense_form.visible_fields %}
+                        {{ field.errors }}
+                        {{ field.help_text }}
+                        {{ field }}
+                    {% endfor %}
+                    <input type="submit" name="expense" value="add expense" />
+                </form>
+            </div>
+            <div class="col-md-4">
+            {% if macros %}
+                <h2>{{ user.username }}'s Macros</h2>
+                <ul>
+                    {% for key, value in macros.items %}
+                    <!-- Following line changed to add an HTML hyperlink -->
+                    <li class="macro">{{ key }} = {{ value }}</li>
+                    <!--
+                    <form id="delete_macro" method="post">
+                        {% csrf_token %}
+                        <input type="submit" name={{ key }} value="delete macro" />
+                    </form>
+                    -->
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            </div>
+            <div class="col-md-4">
+                <h2>Monthly Budget</h2>
+                {% if budget %}
+                    <h4>${{ budget.budget|floatformat:2 }}</h4>
+                    <h4>Will reset on: {{ budget.latest_date }}</h4>
+                    <h4>Used so far month: ${{ used|floatformat:2 }}</h4>
+                    <h4>Percentage used: {{ percentage|floatformat:2 }}%</h4>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="col-md-12">
+        <h2>Expenses</h2>
+        {% if expenses %}
+            <table class="table">
+                <tr>
+                    <th>Name</th>
+                    <th>Amount ($)</th>
+                    <th>Date</th>
+                    <th>Description</th>
+                </tr>
+                {% for expense in expenses %}
+                <a href= {{ expense.expense_id }}>
+                <tr>
+                    <td>{{ expense.name }}</td>
+                    <td>{{ expense.amount|floatformat:2 }}</td>
+                    <td>{{ expense.date }} </td>
+                    <td>{{ expense.description }}</td>
+                </tr>
+                </a>
+                {% endfor %}
+            </table>
         
+        {% else %}
+            <strong>There are no expenses present.</strong>
+        
+        {% endif %}
+        </div>
+    </div>
+    
+    
+   
 
-        <input type="submit" name="macro" value="add macro" />
-    </form>
 
 {% endif %}
 

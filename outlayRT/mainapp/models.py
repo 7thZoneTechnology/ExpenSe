@@ -17,7 +17,6 @@ class Expenses(models.Model):
 	amount = models.FloatField()
 	name = models.CharField(max_length=32) 
 	# repo = models.CharField(max_length=32) #name of the repo 
-
 	def __unicode__(self):
 		return self.name
 
