@@ -4375,7 +4375,7 @@ a.list-group-item.active > .badge,
   color: inherit;
 }
 .jumbotron p {
-  margin-bottom: 15px;
+  margin-bottom: 10px;
   font-size: 21px;
   font-weight: 200;
 }
@@ -5798,11 +5798,25 @@ footer {
   text-align: center;
 }
 .navbar {
-  background-color: #aac7a7;
+  background-color: #5C7D5B;
 }
 .nav > li > a {
   color:white
 ;}
 ul {
   list-style-type:none;
+}
+.masthead-brand {
+  color:white;
+  text-align:left;
+  display:inline;
+  font-size:1.1em;
+  line-height: 20px;
+  position:relative;
+  top:15px;
+}
+.jumbotron {
+  margin-bottom:10px;
+  padding-top:25px;
+  padding-bottom:25px;
 }

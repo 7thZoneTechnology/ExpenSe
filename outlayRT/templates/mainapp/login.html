@@ -1,22 +1,45 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <!-- Is anyone getting tired of repeatedly entering the header over and over?? -->
-        <title>OutlayRT</title>
-    </head>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
 
-    <body>
-        <h1>Login to OutlayRT</h1>
+    <title>Signin Template for Bootstrap</title>
 
-        <form id="login_form" method="post" action="/OutlayRT/login/">
-            {% csrf_token %}
-            Username: <input type="text" name="username" value="" size="50" />
-            <br />
-            Password: <input type="password" name="password" value="" size="50" />
-            <br />
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.css'%}" rel="stylesheet">
 
-            <input type="submit" value="submit" />
-        </form>
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/signin.css' %}" rel="stylesheet">
 
-    </body>
+
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <form class="form-signin" role="form" id="login_form" method="post" action="/OutlayRT/login/">
+        {% csrf_token %}
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <input type="text" class="form-control" placeholder="Username" name="username" required autofocus>
+        <input type="password" class="form-control" placeholder="Password" name="password" required>
+        <label class="checkbox">
+          <input type="checkbox" value="remember-me"> Remember me
+        </label>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" >Sign in</button>
+      </form>
+
+    </div> <!-- /container -->
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+  </body>
 </html>

@@ -43,7 +43,7 @@ def costPerDay(user_name):
 	amount = 0
 	join_date = getUserId(user_name).user.date_joined.replace(tzinfo=None)
 	today = datetime.now()
-	days = (today - join_date).days
+	days = (today - join_date).days + 1
 	expenses = Expenses.objects.filter(user_id__exact=getUserId(user_name))
 	for item in expenses:
 		amount += item.amount

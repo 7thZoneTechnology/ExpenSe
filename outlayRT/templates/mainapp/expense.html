@@ -5,9 +5,8 @@
 {% block body_block %}
 
 <div class="container">
+{% if expense %}
     <h1>Update Expense</h1>
-
-    <h2><a href=".">Back to dashboard</a></h2>
 
     <h3>{{ expense.name }} : ${{ expense.amount|floatformat:2 }} on {{ expense.date }} ID: {{ expense.expense_id }} Description: {{ expense.description }}</h3>
     
@@ -31,6 +30,12 @@
         {% csrf_token %}
         <input type="submit" name={{ expense.expense_id }} value="delete expense" />
     </form>
+{% else %}
+    <div class="col-md-12">
+        <h3>Your Expense has been deleted! Return to your dashboard</h3>
+    </div>
+{% endif %}
 </div>
+
 
 {% endblock %}

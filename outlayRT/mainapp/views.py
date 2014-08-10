@@ -29,11 +29,27 @@ def dashboard(request, user_name_url):
 		context_dict['percentage'] = getPercentage(user_name)
 		context_dict['perday'] = costPerDay(user_name)
 	
-	context_dict['expenses'] = readExpense("filter", user_name=user_name)
+	context_dict['expenses'] = readExpense("filter", user_name=user_name)[:10]
 	context_dict['macros'] = readMacro(user_name)
 	context_dict['expense_form'] = ExpenseForm()
 	
 	return render_to_response('mainapp/dashboard.html', context_dict, context)
+@login_required
+def all_expenses(request, user_name_url):
+	context = RequestContext(request)
+	user_name = user_name_url.replace('_', ' ')
+	context_dict = {}
+	context_dict['expenses'] = readExpense("filter", user_name=user_name)
+	return render_to_response('mainapp/all_expenses.html', context_dict, context)
+
+@login_required
+def expense_by_month(request, user_name_url, month_url):
+	context = RequestContext(request)
+	user_name = user_name_url.replace('_', ' ')
+	context_dict = {}
+	context_dict['expenses'] = readExpense("month"+month_url, user_name=user_name)
+	return render_to_response('mainapp/all_expenses.html', context_dict, context)
+
 
 @login_required
 def edit_expense(request, user_name_url, expense_id_url):
@@ -50,7 +66,9 @@ def edit_expense(request, user_name_url, expense_id_url):
 				print expense_form.errors
 		elif checkIfExpense(request.POST):
 			deleteExpense(checkIfExpense(request.POST))
-	context_dict = {'expense' : readExpense("get", id=expense_id)}
+	context_dict = {}
+	if readExpense("get", id=expense_id):
+		context_dict ['expense'] = readExpense("get", id=expense_id)
 	context_dict['expense_form'] = ExpenseEditForm()
 	return render_to_response('mainapp/expense.html', context_dict, context)
 
@@ -91,14 +109,15 @@ def edit_budget(request, user_name_url):
 				print budget_form.errors
 		elif 'delete_budget' in request.POST:
 			deleteBudget(user_name)
+	context_dict = {}
 	if readBudget(user_name):
-		context_dict = {'budget': readBudget(user_name)}
+		context_dict['budget'] = readBudget(user_name)
 	context_dict['budget_form'] = BudgetForm()
 	return render_to_response('mainapp/budget.html', context_dict, context)
 
 def index(request): 
 	context = RequestContext(request)
-	response = render_to_response('mainapp/index.html', context)
+	response = render_to_response('mainapp/index.html', context_dict, context)
 	if request.session.get('last_visit'):
 		last_visit_time = request.session.get('last_visit')
 		visits = request.session.get('visits', '0')
@@ -109,6 +128,10 @@ def index(request):
 		request.session['last_visit'] = str(datetime.now())
 		request.session['visits'] = 1
 	return response
+
+def about(request):
+	context = RequestContext(request)
+	return render_to_response('mainapp/about.html', context)
 
 # User registration and login views
 
@@ -128,7 +151,8 @@ def register(request):
 				profile.picture = request.FILES['picture']
 			profile.save()
 			registered = True
-
+			context_dict = {'user': user}
+			return render_to_response('mainapp/index.html', context)
 		else:
 			print user_form.errors, profile_form.errors
 	else:

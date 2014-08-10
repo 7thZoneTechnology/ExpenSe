@@ -9,7 +9,7 @@
         <div class="container">
             <div class="col-md-4">
                 <h2>CPD: {{ perday|floatformat:2 }}</h2>
-                <h3>Add an Expense</h3>
+                <h4>Add an Expense</h4>
                 <form id="category_form" method="post" action="">
 
                     {% csrf_token %}
@@ -27,11 +27,11 @@
             </div>
             <div class="col-md-4">
             {% if macros %}
-                <h2>{{ user.username }}'s Macros</h2>
-                <ul>
+                <h2>Macros</h2>
+                
                     {% for key, value in macros.items %}
                     <!-- Following line changed to add an HTML hyperlink -->
-                    <li class="macro">{{ key }} = {{ value }}</li>
+                    <h5 class="macro">{{ key }} = {{ value }}</h5>
                     <!--
                     <form id="delete_macro" method="post">
                         {% csrf_token %}
@@ -46,9 +46,9 @@
                 <h2>Monthly Budget</h2>
                 {% if budget %}
                     <h4>${{ budget.budget|floatformat:2 }}</h4>
-                    <h4>Will reset on: {{ budget.latest_date }}</h4>
-                    <h4>Used so far month: ${{ used|floatformat:2 }}</h4>
-                    <h4>Percentage used: {{ percentage|floatformat:2 }}%</h4>
+                    <h5>Used so far month: ${{ used|floatformat:2 }}</h5>
+                    <h5>Percentage used: {{ percentage|floatformat:2 }}%</h5>
+                    <h5>Will reset on: {{ budget.latest_date }}</h5>
                 {% endif %}
             </div>
         </div>
@@ -63,17 +63,20 @@
                     <th>Amount ($)</th>
                     <th>Date</th>
                     <th>Description</th>
+                    <th>Edit</h2>
                 </tr>
                 {% for expense in expenses %}
-                <a href= {{ expense.expense_id }}>
                 <tr>
                     <td>{{ expense.name }}</td>
                     <td>{{ expense.amount|floatformat:2 }}</td>
                     <td>{{ expense.date }} </td>
                     <td>{{ expense.description }}</td>
+                    <td><a href= {{ expense.expense_id }}><span class="glyphicon glyphicon-pencil"></span></a></td>
                 </tr>
-                </a>
                 {% endfor %}
+                <tr>
+                    <td><a href="./all_expenses">See all</a></td>
+                </tr>
             </table>
         
         {% else %}

@@ -32,7 +32,7 @@
               <h3 class="masthead-brand">Expen$e</h3>
               <ul class="nav masthead-nav">
               {% if user.is_authenticated %}
-                <li><a href={{ username }}>Dashboard</a></li>
+                <li><a href="../">Main</a></li>
                   <li><a href="/OutlayRT/logout">Logout</a></li>
               {% else %}
                   <li><a href="/OutlayRT/register/">Register Here</a></li>
@@ -43,19 +43,33 @@
             </div>
           </div>
 
-          <div class="inner cover">
-            <h1 class="cover-heading">Simple Expense Tracking</h1>
-            <p class="lead">Set custom macros and a budget to make tracking your expenses dead simple.</p>
-            <p class="lead">
-              <a href="/OutlayRT/about/" class="btn btn-lg btn-default">Learn More</a>
-            </p>
+         
+          <div class="col-md-4" style="text-align:left">
+            <h3>Expenses</h3>
+            <ul>
+              <li>Easily record your expenses from the dashboard. Just enter your macro+expense amount. So if your macro was
+              c: car, enter in c99.99 for a $99.99 car expense. </li>
+              <br>
+              <li>View all your expenses right on your dashboard. Editing and deleting expenses is also supported through the Edit button for each expense.</li>
+            </ul>
           </div>
-
-          <div class="mastfoot">
-            <div class="inner">
-              <p>Cover template for <a href="http://getbootstrap.com">Bootstrap</a>, by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-            </div>
+          <div class="col-md-4" style="text-align:left">
+            <h3>Macros</h3>
+            <ul>
+              <li>A macro is a hotkey for a type of expense. For example, f=food will set the macro f to the expense type food. Set, add and delete macros to make recording expenses easier.</li>
+              <br>
+              <li>The default macros may be overwritten, but not deleted.</li>
+            </ul>
           </div>
+          <div class="col-md-4" style="text-align:left">
+            <h3>Budget</h3>
+            <ul>
+              <li>Set a monthly budget for yourself. Expen$e will keep track of how much you've used this month.</li>
+              <br>
+              <li>A cost per day figure is also calculated for you to easily view your daily cost of living. It gets more accurate the longer you use Expen$e.</li>
+            </ul>
+          </div>
+        
 
         </div>
 

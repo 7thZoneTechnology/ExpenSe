@@ -36,9 +36,14 @@ def createExpense(coded, macros, user_name, final_form):
 
 def readExpense(command, user_name=None, id=None):
 	if command == "filter":
-		return Expenses.objects.filter(user_id=getUserId(user_name))
+		return Expenses.objects.filter(user_id=getUserId(user_name)).order_by('-date')
 	elif command =="get":
-		return Expenses.objects.get(expense_id__exact=id)
+		try:
+			return Expenses.objects.get(expense_id__exact=id)
+		except ObjectDoesNotExist:
+			return None
+	elif command.substring("month"):
+		return Expenses.objects.filter(user_id=getUserId(user_name)).order_by('-date')
 
 def updateExpense(form , id):
 	expense = Expenses.objects.get(expense_id=id)

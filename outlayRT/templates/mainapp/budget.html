@@ -5,7 +5,6 @@
 {% block body_block %}
 
 <div class="container">
-    <h3><a href=".">Back to dashboard</a></h3>
     {% if budget %}
 
     <h2>Budget: ${{ budget.budget|floatformat:2 }}</h2>
@@ -22,7 +21,7 @@
             {{ field.help_text }}
             {{ field }}
         {% endfor %}
-        <input type="submit" name="budget" value="add budget" />
+        <input type="submit" name="budget" value="update" />
     </form>
     {% else %}
     <h1>Create budget</h1>
