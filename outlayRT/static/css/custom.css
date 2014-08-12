@@ -1,0 +1,37 @@
+body { 
+  padding-top: 50px; 
+  -webkit-text-smoothing: antialiased;
+}
+footer {
+  position:absolute;
+  bottom: 0;
+}
+.macro {
+  font-size: 15px;
+}
+.center {
+  text-align: center;
+}
+.navbar {
+  background-color: #5C7D5B;
+}
+.nav > li > a {
+  color:white
+;}
+ul {
+  list-style-type:none;
+}
+.masthead-brand {
+  color:white;
+  text-align:left;
+  display:inline;
+  font-size:1.1em;
+  line-height: 20px;
+  position:relative;
+  top:15px;
+}
+.jumbotron {
+  margin-bottom:10px;
+  padding-top:25px;
+  padding-bottom:25px;
+}
