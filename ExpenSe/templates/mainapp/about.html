@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Cover Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{% static 'css/cover.css' %}" rel="stylesheet">
+    <link href="{% static 'css/custom.css' %}" rel="stylesheet">
+
+
+  </head>
+
+  <body>
+
+    <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+              <h3 class="masthead-brand">Expen$e</h3>
+              <ul class="nav masthead-nav">
+              {% if user.is_authenticated %}
+                <li><a href="../">Main</a></li>
+                  <li><a href="/ExpenSe/logout">Logout</a></li>
+              {% else %}
+                  <li><a href="/ExpenSe/register/">Register Here</a></li>
+                  <li><a href="/ExpenSe/login/">Login</a></li>
+              {% endif %}
+                  <li><a href="/ExpenSe/about/">About</a></li>
+              </ul>
+            </div>
+          </div>
+
+         
+          <div class="col-md-4" style="text-align:left">
+            <h3>Expenses</h3>
+            <ul>
+              <li>Easily record your expenses from the dashboard. Just enter your macro+expense amount. So if your macro was
+              c: car, enter in c99.99 for a $99.99 car expense. </li>
+              <br>
+              <li>View all your expenses right on your dashboard. Editing and deleting expenses is also supported through the Edit button for each expense.</li>
+            </ul>
+          </div>
+          <div class="col-md-4" style="text-align:left">
+            <h3>Macros</h3>
+            <ul>
+              <li>A macro is a hotkey for a type of expense. For example, f=food will set the macro f to the expense type food. Set, add and delete macros to make recording expenses easier.</li>
+              <br>
+              <li>The default macros may be overwritten, but not deleted.</li>
+            </ul>
+          </div>
+          <div class="col-md-4" style="text-align:left">
+            <h3>Budget</h3>
+            <ul>
+              <li>Set a monthly budget for yourself. Expen$e will keep track of how much you've used this month.</li>
+              <br>
+              <li>A cost per day figure is also calculated for you to easily view your daily cost of living. It gets more accurate the longer you use Expen$e.</li>
+            </ul>
+          </div>
+        
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script src="{% static 'js/jquery-1.11.1.min.js' %}"></script>
+  </body>
+</html>
