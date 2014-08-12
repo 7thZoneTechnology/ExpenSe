@@ -52,6 +52,14 @@ Limit expenses to only top 10 entries then click to view all.
 
 Need to implement
 
+
+
+Display ten expenses at a time on main page --> Tried unsuccessfully to achieve with AJAX, will just reload page...
+Select by month on all expenses page - can be done with page reloads
+Select by expense type 
+
+Better stats for different expense types (based on macros, e.g. pie graph of expense type/total)
+Let users pick custom colors dashboard! Will need new database
 Deploy and writeup 
 
 Log
