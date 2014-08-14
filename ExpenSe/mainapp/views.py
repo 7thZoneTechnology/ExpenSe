@@ -5,9 +5,8 @@ from mainapp.forms import ExpenseForm, UserForm, UserProfileForm, MacroForm, Exp
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from datetime import datetime
-from helpers import checkIfExpense, checkIfMacro, getBudgetUsed, costPerDay, getPercentage
+from helpers import checkIfExpense, checkIfMacro, getRemaining, costPerDay, getPercentage
 from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro, readBudget, createBudget, deleteBudget
-import re
 
 @login_required
 def dashboard(request, user_name_url): 
@@ -26,7 +25,7 @@ def dashboard(request, user_name_url):
 				print expense_form.errors
 	context_dict['budget'] = readBudget(user_name)
 	if readBudget(user_name):
-		context_dict['used'] = getBudgetUsed(user_name)
+		context_dict['used'] = getRemaining(user_name)
 		context_dict['percentage'] = getPercentage(user_name)
 		context_dict['perday'] = costPerDay(user_name)
 	
@@ -122,6 +121,9 @@ def edit_budget(request, user_name_url):
 	context_dict = {}
 	if readBudget(user_name):
 		context_dict['budget'] = readBudget(user_name)
+		context_dict['used'] = getRemaining(user_name)
+		context_dict['percentage'] = getPercentage(user_name)
+		context_dict['perday'] = costPerDay(user_name)
 	context_dict['budget_form'] = BudgetForm()
 	return render_to_response('mainapp/budget.html', context_dict, context)
 

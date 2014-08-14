@@ -24,10 +24,10 @@ class MacroForm(forms.ModelForm):
 		fields = ('key', 'value')
 
 class ExpenseEditForm(forms.ModelForm):
-	date = forms.DateTimeField(required=False, help_text="Date") #what date the expense was entered
-	description = forms.CharField(max_length=128, required=False, help_text="Description") #description of the expense
-	name = forms.CharField(max_length=64, required=False, help_text="Name") # ex. groceries, entertainment, etc.
-	amount = forms.IntegerField(required=False, help_text="Amount")
+	date = forms.CharField(required=False, help_text="") #what date the expense was entered
+	description = forms.CharField(max_length=128, required=False, help_text="") #description of the expense
+	name = forms.CharField(max_length=64, required=False, help_text="") # ex. groceries, entertainment, etc.
+	amount = forms.IntegerField(required=False, help_text="")
 
 	class Meta:
 		model = Expenses

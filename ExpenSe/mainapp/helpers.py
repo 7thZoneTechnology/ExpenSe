@@ -16,10 +16,13 @@ def checkIfMacro(request):
 			return item
 	return False
 
-def getBudgetUsed(user_name):
+def getRemaining(user_name):
 	'''returns amount
 	of budget used this month
 	'''
+	return readBudget(user_name).budget - getBudgetUsed(user_name)
+
+def getBudgetUsed(user_name):
 	macros = readMacro(user_name)
 	budget = readBudget(user_name)
 	used = 0

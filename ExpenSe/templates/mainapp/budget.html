@@ -4,40 +4,32 @@
 
 {% block body_block %}
 
-<div class="container">
-    {% if budget %}
-
-    <h2>Budget: ${{ budget.budget|floatformat:2 }}</h2>
-    
-
-    <h1>Change budget</h1>
-     <form id="budget_form" method="post" action="">
-        {% csrf_token %}
-        {% for hidden in budget_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in budget_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-        <input type="submit" name="budget" value="update" />
-    </form>
-    {% else %}
-    <h1>Create budget</h1>
-     <form id="budget_form" method="post" action="">
-        {% csrf_token %}
-        {% for hidden in budget_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-        {% for field in budget_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-        <input type="submit" name="budget" value="add budget" />
-    </form>
-    {% endif %}
+<div class="jumbotron">
+    <div class="container">
+        <div class="col-md-4">
+            <h3>How to use Budget</h3>
+            <p>Add a budget to get real-time feedback on your spendings vs. your budget.
+                ExpenSe displays information such as percentage of budget used, cost/day this month, as well as budget remaining. It'll also tell you when your budget will reset. Updating your budget will not change the reset date, so don't worry!</p>
+        </div>
+        <div class="col-md-4" style="text-align:center">
+             <form id="budget_form" method="post" action="">
+                {% csrf_token %}
+                <div class="input-group">
+                    <span class="input-group-addon">+</span>
+                    <input class="form-control" type="test" name="input" placeholder="set budget"/>
+                </div>
+                <input style="display:none" type="submit" name="budget" value="update" />
+            </form>
+        </div>
+        <div class="col-md-4" style="text-align:right">
+            <h3>Your Stats</h3>
+            {% if budget %}
+                <h4>${{ budget.budget|floatformat:2 }}</h4>
+                <h5>Remaining: ${{ used|floatformat:2 }}</h5>
+                <h5>Percentage used: {{ percentage|floatformat:2 }}%</h5>
+                <h5>Will reset on: {{ budget.latest_date }}</h5>
+            {% endif %}
+        </div>
 </div>
 
 {% endblock %}

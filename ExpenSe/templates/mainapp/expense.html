@@ -13,17 +13,23 @@
     <form id="category_form" method="post" action="">
 
         {% csrf_token %}
-        {% for hidden in expense_form.hidden_fields %}
-            {{ hidden }}
-        {% endfor %}
-
-        {% for field in expense_form.visible_fields %}
-            {{ field.errors }}
-            {{ field.help_text }}
-            {{ field }}
-        {% endfor %}
-
-        <input type="submit" name="expense" value="Update Expense" />
+        <div class="input-group">
+            <span class="input-group-addon">+</span>
+            <input class="form-control" type="test" name="name" placeholder="name"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">$</span>
+            <input class="form-control" type="test" name="amount" placeholder="amount"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">+</span>
+            <input class="form-control" type="test" name="date" placeholder="date"/>
+        </div>
+        <div class="input-group">
+            <span class="input-group-addon">+</span>
+            <input class="form-control" type="test" name="description" placeholder="description"/>
+        </div>
+        <input style="display:none" type="submit" name="expense" value="Update Expense" />
     </form>
 
     <form id="delete_expense" method="post">

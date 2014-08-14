@@ -5,6 +5,7 @@ from monthdelta import MonthDelta
 from django.db.models import Q
 from django.core.exceptions import ObjectDoesNotExist
 import re
+from dateutil import parser
 
 def createExpense(coded, macros, user_name, final_form):
 	'''
@@ -15,7 +16,7 @@ def createExpense(coded, macros, user_name, final_form):
 	# optional name, user can update later
 	decoded = re.compile(r'([^.0-9]*)?(\d*\.?\d*)?(\D*)?')
 	name = decoded.search(coded).groups()[0]
-	if len(name) == 1:
+	if name in macros.keys():
 		name = macros[name]
 	final_form.name = name
 	# get amount
@@ -49,8 +50,8 @@ def updateExpense(form , id):
 	if form.cleaned_data['amount']:
 		expense.amount = form.cleaned_data['amount']
 	if form.cleaned_data['date']:
-		expense.date = form.cleaned_data['date']
-		expense.month = form.cleaned_date['date'].month
+		expense.date = parser.parse(form.cleaned_data['date'])
+		expense.month = expense.date.month
 	if form.cleaned_data['name']:
 		expense.name = form.cleaned_data['name']
 	if form.cleaned_data['description']:
