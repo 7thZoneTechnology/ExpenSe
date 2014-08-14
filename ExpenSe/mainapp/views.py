@@ -75,6 +75,15 @@ def edit_expense(request, user_name_url, expense_id_url):
 				print expense_form.errors
 		elif checkIfExpense(request.POST):
 			deleteExpense(checkIfExpense(request.POST))
+			context_dict = {'budget': readBudget(user_name)}
+			if readBudget(user_name):
+				context_dict['used'] = getRemaining(user_name)
+				context_dict['percentage'] = getPercentage(user_name)
+				context_dict['perday'] = costPerDay(user_name)
+			context_dict['expenses'] = readExpense("filter", user_name=user_name)[:10]
+			context_dict['macros'] = readMacro(user_name)
+			context_dict['expense_form'] = ExpenseForm()
+			return render_to_response('mainapp/dashboard.html', context_dict, context)
 	context_dict = {}
 	if readExpense("get", id=expense_id):
 		context_dict ['expense'] = readExpense("get", id=expense_id)
@@ -182,7 +191,7 @@ def user_login(request):
 		user = authenticate(username=username, password=password)
 		if user:
 			if user.is_active:
-				login(request, user )
+				login(request, user)
 				return HttpResponseRedirect('/ExpenSe/' + username)
 			else:
 				return HttpResponse("Your Outlay account has been disabled")

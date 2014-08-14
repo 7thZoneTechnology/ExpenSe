@@ -50,7 +50,7 @@ def updateExpense(form , id):
 	if form.cleaned_data['amount']:
 		expense.amount = form.cleaned_data['amount']
 	if form.cleaned_data['date']:
-		expense.date = parser.parse(form.cleaned_data['date'])
+		expense.date = form.cleaned_data['date']
 		expense.month = expense.date.month
 	if form.cleaned_data['name']:
 		expense.name = form.cleaned_data['name']
