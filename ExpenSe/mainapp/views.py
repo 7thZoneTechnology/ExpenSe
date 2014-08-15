@@ -9,9 +9,11 @@ from helpers import checkIfExpense, checkIfMacro, getRemaining, costPerDay, getP
 from crud import createExpense, createMacro, readExpense, readMacro, deleteExpense, deleteMacro, updateExpense, updateMacro, readBudget, createBudget, deleteBudget
 
 @login_required
-def dashboard(request, user_name_url): 
+def dashboard(request, user_name_url):
 	context = RequestContext(request)
 	user_name = user_name_url.replace("_", " ")
+	if not request.user.username == user_name:
+		return render_to_response('mainapp/index.html')
 	macros = readMacro(user_name)
 	context_dict = {'macros': macros}
 	if request.method =='POST':
@@ -47,6 +49,8 @@ def which_expenses(request, user_name_url):
 def all_expenses(request, user_name_url):
 	context = RequestContext(request)
 	user_name = user_name_url.replace('_', ' ')
+	if not request.user.username == user_name:
+		return render_to_response('mainapp/index.html')
 	context_dict = {}
 	context_dict['expenses'] = readExpense("filter", user_name=user_name)
 	return render_to_response('mainapp/all_expenses.html', context_dict, context)
@@ -64,6 +68,8 @@ def expense_by_month(request, user_name_url, month_url):
 def edit_expense(request, user_name_url, expense_id_url):
 	context = RequestContext(request)
 	user_name = user_name_url.replace('_', ' ')
+	if not request.user.username == user_name:
+		return render_to_response('mainapp/index.html')
 	expense_id = expense_id_url.replace('_', ' ')
 	if request.method =='POST':
 		if 'expense' in request.POST:
@@ -94,6 +100,8 @@ def edit_expense(request, user_name_url, expense_id_url):
 def edit_macros(request, user_name_url):
 	context = RequestContext(request)
 	user_name = user_name_url.replace('_', ' ')
+	if not request.user.username == user_name:
+		return render_to_response('mainapp/index.html')
 	if request.method =='POST':
 		if 'macro' in request.POST:
 			macro_form = MacroForm(request.POST)
@@ -115,7 +123,8 @@ def edit_macros(request, user_name_url):
 def edit_budget(request, user_name_url):
 	context = RequestContext(request)
 	user_name = user_name_url.replace('_', ' ')
-
+	if not request.user.username == user_name:
+		return render_to_response('mainapp/index.html')
 	if request.method =='POST':
 		if 'budget' in request.POST:
 			budget_form = BudgetForm(request.POST)
